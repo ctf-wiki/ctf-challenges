@@ -1,0 +1,24 @@
+Foremost version 1.5.7 by Jesse Kornblum, Kris Kendall, and Nick Mikus
+Audit File
+
+Foremost started at Fri May 26 17:58:32 2017
+Invocation: foremost carter.jpg 
+Output directory: /mnt/hgfs/Hack/CTF-Learn/misc/stego/jpg/carter/output
+Configuration file: /etc/foremost.conf
+------------------------------------------------------------------
+File: carter.jpg
+Start: Fri May 26 17:58:32 2017
+Length: 189 KB (194188 bytes)
+ 
+Num	 Name (bs=512)	       Size	 File Offset	 Comment 
+
+0:	00000000.jpg 	     136 KB 	          0 	 
+1:	00000273.jpg 	      52 KB 	     140147 	 
+Finish: Fri May 26 17:58:32 2017
+
+2 FILES EXTRACTED
+	
+jpg:= 2
+------------------------------------------------------------------
+
+Foremost finished at Fri May 26 17:58:32 2017
