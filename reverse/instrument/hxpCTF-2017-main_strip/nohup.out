@@ -1,0 +1,64 @@
+002a:fixme:vcruntime:__telemetry_main_invoke_trigger (0x67000000)
+002a:fixme:vcruntime:__telemetry_main_invoke_trigger (0x530000)
+002a:fixme:vcruntime:__telemetry_main_invoke_trigger (0x65000000)
+002a:fixme:vcruntime:__telemetry_main_invoke_trigger (0x180000000)
+002a:fixme:file:FindFirstFileExW flags not implemented 0x00000002
+002a:fixme:vcruntime:__telemetry_main_invoke_trigger (0xe10000)
+002a:fixme:process:SetProcessDEPPolicy (3): stub
+002a:fixme:vcruntime:__telemetry_main_invoke_trigger (0xaaf0000)
+002a:fixme:vcruntime:__telemetry_main_return_trigger (0xaaf0000)
+002a:fixme:process:GetSystemDEPPolicy stub
+002a:fixme:process:GetSystemDEPPolicy stub
+002a:fixme:process:GetSystemDEPPolicy stub
+002a:fixme:process:GetSystemDEPPolicy stub
+002a:fixme:process:GetSystemDEPPolicy stub
+002a:fixme:process:GetSystemDEPPolicy stub
+002a:fixme:commdlg:IServiceProvider_fnQueryService Interface {e07010ec-bc17-44c0-97b0-46c7c95b9edc} requested from unknown service {e07010ec-bc17-44c0-97b0-46c7c95b9edc}
+002a:fixme:shell:ViewModeToListStyle ViewMode 0 not implemented
+002a:fixme:shell:IShellBrowser_fnSendControlMsg stub, 0x99aa140 (2, 1026, a003, 0, 0x528178)
+002a:fixme:shell:IShellBrowser_fnSendControlMsg stub, 0x99aa140 (2, 1026, a004, 0, 0x528178)
+002a:fixme:shell:IShellBrowser_fnSendControlMsg stub, 0x99aa140 (2, 1025, a003, 1, 0x528178)
+002a:fixme:shell:IShellBrowser_fnSendControlMsg stub, 0x99aa140 (2, 1025, a004, 1, 0x528178)
+002a:fixme:nstc:NSTC2_fnSetControlStyle2 mask & style (0x00000004) contains unsupported style(s): 0x00000004
+002a:fixme:shell:IShellBrowser_fnOnViewWindowActive stub, 0x99aa140 (0x99acda0)
+002a:fixme:commdlg:IServiceProvider_fnQueryService Interface {e07010ec-bc17-44c0-97b0-46c7c95b9edc} requested from unknown service {e07010ec-bc17-44c0-97b0-46c7c95b9edc}
+002a:fixme:shell:ViewModeToListStyle ViewMode 0 not implemented
+002a:fixme:shell:IShellBrowser_fnSendControlMsg stub, 0x99aa140 (2, 1026, a003, 0, 0x527ba8)
+002a:fixme:shell:IShellBrowser_fnSendControlMsg stub, 0x99aa140 (2, 1026, a004, 0, 0x527ba8)
+002a:fixme:shell:IShellBrowser_fnSendControlMsg stub, 0x99aa140 (2, 1025, a003, 1, 0x527ba8)
+002a:fixme:shell:IShellBrowser_fnSendControlMsg stub, 0x99aa140 (2, 1025, a004, 1, 0x527ba8)
+002a:fixme:commdlg:IServiceProvider_fnQueryService Interface {e07010ec-bc17-44c0-97b0-46c7c95b9edc} requested from unknown service {e07010ec-bc17-44c0-97b0-46c7c95b9edc}
+002a:fixme:shell:ViewModeToListStyle ViewMode 0 not implemented
+002a:fixme:shell:IShellBrowser_fnSendControlMsg stub, 0x99aa140 (2, 1026, a003, 0, 0x527e58)
+002a:fixme:shell:IShellBrowser_fnSendControlMsg stub, 0x99aa140 (2, 1026, a004, 0, 0x527e58)
+002a:fixme:shell:IShellBrowser_fnSendControlMsg stub, 0x99aa140 (2, 1025, a003, 1, 0x527e58)
+002a:fixme:shell:IShellBrowser_fnSendControlMsg stub, 0x99aa140 (2, 1025, a004, 1, 0x527e58)
+002a:fixme:shell:IShellBrowser_fnOnViewWindowActive stub, 0x99aa140 (0x99acc60)
+002a:fixme:commdlg:IServiceProvider_fnQueryService Interface {e07010ec-bc17-44c0-97b0-46c7c95b9edc} requested from unknown service {e07010ec-bc17-44c0-97b0-46c7c95b9edc}
+002a:fixme:shell:ViewModeToListStyle ViewMode 0 not implemented
+002a:fixme:shell:IShellBrowser_fnSendControlMsg stub, 0x99aa140 (2, 1026, a003, 0, 0x527ba8)
+002a:fixme:shell:IShellBrowser_fnSendControlMsg stub, 0x99aa140 (2, 1026, a004, 0, 0x527ba8)
+002a:fixme:shell:IShellBrowser_fnSendControlMsg stub, 0x99aa140 (2, 1025, a003, 1, 0x527ba8)
+002a:fixme:shell:IShellBrowser_fnSendControlMsg stub, 0x99aa140 (2, 1025, a004, 1, 0x527ba8)
+002a:fixme:shell:IShellBrowser_fnOnViewWindowActive stub, 0x99aa140 (0x9a1b160)
+002a:fixme:win:FlashWindowEx 0x527680 - semi-stub
+002a:fixme:win:FlashWindowEx 0x5284d0 - semi-stub
+002a:fixme:vcruntime:__telemetry_main_invoke_trigger (0x114c0000)
+002a:fixme:process:GetSystemDEPPolicy stub
+002a:fixme:process:GetSystemDEPPolicy stub
+002a:fixme:process:GetSystemDEPPolicy stub
+002a:fixme:process:GetSystemDEPPolicy stub
+002a:fixme:process:GetSystemDEPPolicy stub
+002a:fixme:process:GetSystemDEPPolicy stub
+002a:fixme:process:GetSystemDEPPolicy stub
+002a:fixme:process:GetSystemDEPPolicy stub
+002a:fixme:vcruntime:__telemetry_main_return_trigger (0x114c0000)
+002a:fixme:msvcrt:__clean_type_info_names_internal (0xfae6268) stub
+002a:fixme:msvcrt:__clean_type_info_names_internal (0xeac9aa8) stub
+002a:fixme:msvcrt:__clean_type_info_names_internal (0x1d1bdd68) stub
+002a:fixme:msvcrt:__clean_type_info_names_internal (0x1e31e2e8) stub
+002a:fixme:vcruntime:__telemetry_main_return_trigger (0xe10000)
+002a:fixme:vcruntime:__telemetry_main_return_trigger (0x180000000)
+002a:fixme:vcruntime:__telemetry_main_return_trigger (0x65000000)
+002a:fixme:vcruntime:__telemetry_main_return_trigger (0x530000)
+002a:fixme:vcruntime:__telemetry_main_return_trigger (0x67000000)
