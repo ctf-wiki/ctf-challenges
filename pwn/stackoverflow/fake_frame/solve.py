@@ -10,7 +10,6 @@ def DEBUG(cmd):
     raw_input("DEBUG: ")
     gdb.attach(io, cmd)
 
-
 io = process("./over.over")
 #  DEBUG("b *0x4006B9\nc")
 elf = ELF("./over.over")
