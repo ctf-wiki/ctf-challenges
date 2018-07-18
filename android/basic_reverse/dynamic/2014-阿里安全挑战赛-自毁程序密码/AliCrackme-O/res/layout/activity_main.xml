@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="#ff000000" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <ImageView android:layout_width="fill_parent" android:layout_height="wrap_content" android:src="@drawable/creakme_bg2" android:scaleType="fitXY" />
+        <TextView android:textSize="14.0sp" android:textColor="#fff4f4f4" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:layout_marginTop="20.0dip" android:layout_marginRight="10.0dip" android:text="     当Bob带领银河飞行队赶到时，飞碟已坠落在小山谷里，驾驶员在坠落前启动了自毁程序，飞碟中的一切已化为灰烬，唯一幸免的是一部手机，但需要开机密码。" />
+        <EditText android:textSize="17.0sp" android:textColor="#ff000000" android:id="@id/inputcode" android:background="@drawable/shape_edittext_bg" android:padding="5.0dip" android:layout_width="200.0dip" android:layout_height="40.0dip" android:layout_marginTop="20.0dip" android:layout_marginBottom="20.0dip" />
+        <Button android:textSize="17.0sp" android:textColor="#ffffffff" android:id="@id/submit" android:background="@drawable/selector_button_green" android:layout_width="200.0dip" android:layout_height="40.0dip" android:layout_marginBottom="80.0dip" android:text="输入密码" />
+        <FrameLayout android:layout_gravity="bottom" android:padding="20.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1.0">
+            <ImageView android:layout_gravity="bottom|center|left" android:layout_width="100.0dip" android:layout_height="60.0dip" android:src="@drawable/jaq_2" />
+            <LinearLayout android:gravity="center_horizontal" android:layout_gravity="bottom|center|right" android:orientation="horizontal" android:paddingBottom="15.0dip" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <ImageView android:layout_width="25.0dip" android:layout_height="25.0dip" android:src="@drawable/qd_logo" />
+                <TextView android:textSize="13.0sp" android:textColor="#ffffffff" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:text="阿里钱盾" />
+            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
+</RelativeLayout>
