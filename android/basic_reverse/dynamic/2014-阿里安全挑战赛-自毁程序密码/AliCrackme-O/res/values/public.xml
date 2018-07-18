@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <public type="drawable" name="selector_button_green" id="0x7f020005" />
+    <public type="drawable" name="shape_edittext_bg" id="0x7f020006" />
+    <public type="drawable" name="shape_gradient_rect_shape" id="0x7f020007" />
+    <public type="drawable" name="bg" id="0x7f020000" />
+    <public type="drawable" name="creakme2_logo" id="0x7f020001" />
+    <public type="drawable" name="creakme_bg2" id="0x7f020002" />
+    <public type="drawable" name="jaq_2" id="0x7f020003" />
+    <public type="drawable" name="qd_logo" id="0x7f020004" />
+    <public type="layout" name="activity_main" id="0x7f030000" />
+    <public type="layout" name="activity_result" id="0x7f030001" />
+    <public type="color" name="button_green_text" id="0x7f040000" />
+    <public type="color" name="button_green_defual" id="0x7f040001" />
+    <public type="color" name="button_green_pressed" id="0x7f040002" />
+    <public type="color" name="button_red_defual" id="0x7f040003" />
+    <public type="color" name="button_red_pressed" id="0x7f040004" />
+    <public type="dimen" name="activity_horizontal_margin" id="0x7f050000" />
+    <public type="dimen" name="activity_vertical_margin" id="0x7f050001" />
+    <public type="id" name="inputcode" id="0x7f060000" />
+    <public type="id" name="submit" id="0x7f060001" />
+    <public type="id" name="textView" id="0x7f060002" />
+    <public type="string" name="app_name" id="0x7f070000" />
+    <public type="string" name="hello_world" id="0x7f070001" />
+    <public type="string" name="action_settings" id="0x7f070002" />
+</resources>
