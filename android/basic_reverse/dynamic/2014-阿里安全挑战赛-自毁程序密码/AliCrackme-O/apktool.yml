@@ -1,0 +1,31 @@
+!!b.a.b.a
+apkFileName: AliCrackme.apk
+compressionType: false
+decodeFileMaps:
+  res/drawable-hdpi/creakme2_logo.jpg: res/drawable-hdpi-v4/creakme2_logo.jpg
+  res/drawable-hdpi/creakme_bg2.jpg: res/drawable-hdpi-v4/creakme_bg2.jpg
+  res/drawable-hdpi/qd_logo.png: res/drawable-hdpi-v4/qd_logo.png
+  res/drawable-hdpi/jaq_2.png: res/drawable-hdpi-v4/jaq_2.png
+  res/drawable-hdpi/bg.png: res/drawable-hdpi-v4/bg.png
+dexMaps: null
+doNotCompress:
+- resources.arsc
+isFrameworkApk: false
+packageInfo:
+  forcedPackageId: '127'
+  renameManifestPackage: null
+sdkInfo:
+  minSdkVersion: '8'
+  targetSdkVersion: '19'
+shakaVer: 3.0.0-master-f1e0a9f-20160905
+sharedLibrary: false
+unknownFiles:
+  META-INF/MANIFEST.MF: '8'
+usesFramework:
+  ids:
+  - 1
+  tag: null
+version: 2.1.2-SNAPSHOT-master-64644a1
+versionInfo:
+  versionCode: '1'
+  versionName: '1.0'
