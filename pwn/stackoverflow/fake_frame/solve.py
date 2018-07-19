@@ -4,7 +4,6 @@
 from pwn import *
 context.log_level = "debug"
 context.binary = "./over.over"
-context.terminal = ["deepin-terminal", "-x", "sh", "-c"]
 
 def DEBUG(cmd):
     raw_input("DEBUG: ")
