@@ -4,4 +4,4 @@
 
 # 解答
 
-http://www.programlife.net/0ops-ctf-writeup.html
+0ops
