@@ -1,0 +1,14 @@
+{
+  "name": "wave",
+  "description": "wave",
+  "version": "1.0.0",
+  "author": "曾皓辰 <haochen.zeng10@gmail.com>",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+  },
+  "dependencies": {
+    "randgen": "^0.1.0"
+  }
+}
