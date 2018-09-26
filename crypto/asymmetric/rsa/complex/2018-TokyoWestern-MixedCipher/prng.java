@@ -2,7 +2,6 @@ public class Main {
 
    static int[] state;
    static int currentIndex;
-40huo
    public static void main(String[] args) {
       state = new int[624];
       currentIndex = 0;
