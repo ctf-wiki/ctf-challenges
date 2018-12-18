@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Pykemon</title>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+
+    <!-- Navigation -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand page-scroll" href="/">Pykemon</a>
+            </div>
+            <div class="row" align="center" style="padding-top:10px;">
+                <button id="play" class="btn btn-primary" type="button" onClick="window.location.reload()">Play Again</button>
+                <button id="caught" class="btn btn-info" type="button" onClick="javascript: displayCaught()">Pykemon Caught</button>
+                <button id="buy" class="btn btn-info" type="button" onClick="javascript: buyPykaballs()">Buy Pykaball</button>
+                Pykaballs Left: <span id="balls">{{balls}}</span>
+            </div>
+       </div>
+    </div>
+
+    <!-- Intro Section -->
+    <section id="intro" class="intro-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-md-20 col-md-offset-1">
+                        <div class="row form-group">
+                        {% for p in pykemon %}
+                            <img class="image" id={{p.name}}{{p.hp}} style="visibility: visible; position: fixed;" src={{p.sprite}} width=32px height=32px title={{p.name}} >
+                        {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+        <div id="dialog" align="center">
+            <p></p>
+        </div>
+        <div id="dialog-form" class="dialog" title="Rename Pykemon ?" style="overflow: auto;">
+            <p>All form fields are required.</p>
+            <form id="pykerename" action="/rename/" method="POST">
+                <fieldset>
+                <label for="name">New Name</label>
+                <input type="text" name="new_name" id="new_name" value="" class="text ui-widget-content ui-corner-all">
+                
+                </fieldset>
+              </form>
+        </div>
+
+
+    <!-- jQuery -->
+    <script src="/js/jquery.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/js/bootstrap.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                console.log( "ready!" );
+                $(window).keydown(function(event){
+                    if(event.keyCode == 13) {
+                        event.preventDefault();
+                        return false;
+                    }
+                });
+                $('#dialog-form').hide();
+                $('.image').click(function(){
+                    $.post("/catch/", {'name': this.id}, function(data){
+                        name= this.data.split('=')[1]
+                        data = data.split('!')
+                        balls = data[1]
+                        msg = data[0]
+                        over = data[2]
+        
+                        $('#'+name).hide();
+
+                        if (msg.includes('GAME OVER')){
+                            $("#dialog").html(over)
+                            $("#dialog").dialog({
+                                modal: true,
+                                buttons: {
+                                    "Play Again": function(){
+                                        window.location.reload();
+                                    }
+                                },
+                                close: function(){
+                                    window.location.reload();
+                                }
+                            });
+                        }
+                       
+                        if (msg.includes('away')) {
+                          $("#balls").text(balls)
+                          $('#dialog').html(msg+'!')
+                          $( "#dialog" ).dialog({
+                                resizable: false,
+                                modal: true,
+                                buttons: {
+                                    "OK": function() {
+                                        $( this ).dialog( "close" );
+                                        if (over || balls == 0){
+                                            $("#dialog").html("GAME OVER")
+                                            $("#dialog").dialog({
+                                                modal: true,
+                                                buttons: {
+                                                    "Play Again": function(){
+                                                    window.location.reload();
+                                                }
+                                            },
+                                            close: function(){
+                                                window.location.reload();
+                                                }
+                                            });
+                                        }
+                                    }
+                                },
+                                close: function(){
+                                    if (over || balls == 0){
+                                        $("#dialog").html("GAME OVER")
+                                        $("#dialog").dialog({
+                                            modal: true,
+                                            buttons: {
+                                                "Play Again": function(){
+                                                window.location.reload();
+                                            }
+                                        },
+                                        close: function(){
+                                            window.location.reload();
+                                            }
+                                        });
+                                    }
+                                }
+                            }); 
+                        }
+                        else {
+                            $("#balls").text(balls);
+                            $("#dialog-form p").text(msg + "! Rename pykemon?");
+                            var tmp = name.match(/[a-zA-Z]+/g)[0]
+                            $("#new_name").val(tmp)
+                            
+                          
+                            var d = $( "#dialog-form" ).dialog({
+                                modal:true,
+                                resizable: false,
+                                buttons: {
+                                    "Rename": function() {
+                                        var new_name = $("#new_name").val().trim();
+                                        d.dialog("close");
+                                        $.post("/rename/", {'name': name, 'new_name':new_name}, function(data) {
+                                            $('#dialog').html(data)
+                                            $('#dialog').dialog({
+                                                modal: true,
+                                                buttons: {
+                                                    "OK": function(){
+                                                        $(this).dialog("close");
+                                                        if (over || balls == 0){
+                                                            dialog.find( "form" )[0].reset()
+                                                            $("#dialog").dialog({
+                                                                modal: true,
+                                                                buttons: {
+                                                                    "Play Again": function(){
+                                                                        window.location.reload();
+                                                                    }
+                                                                },
+                                                                close: function(){
+                                                                    window.location.reload();
+                                                                }
+                                                            });
+                                                        } 
+                                                    }
+                                                },
+                                                beforeClose: function() {
+                                                    $("#pykerename").trigger("reset");
+                                                },
+                                                close: function() {
+                                                    if (over || balls == 0){
+                                                        $("#dialog").html("GAME OVER!")
+                                                        $("#dialog").dialog({
+                                                            modal: true,
+                                                            buttons: {
+                                                                "Play Again": function(){
+                                                                    window.location.reload();
+                                                                }
+                                                            },
+                                                            close: function(){
+                                                                window.location.reload();
+                                                            }
+                                                        });
+                                                    }  
+                                                }
+                                            });
+                                        });
+                                        
+                                    },
+                                    "Close": function() {
+                                        d.dialog("close");
+                                        if (over || balls == 0){
+                                            $("#dialog").html(over)
+                                            $("#dialog").dialog({
+                                                    modal: true,
+                                                    buttons: {
+                                                        "Play Again": function(){
+                                                            window.location.reload();
+                                                        }
+                                                    },
+                                                    close: function(){
+                                                        window.location.reload();
+                                                    }
+                                            });
+                                        }
+                                    }
+
+                                },
+                                beforeClose: function() {
+                                    $("#pykerename").trigger("reset");
+                                }
+
+                            });
+
+                        }
+                   });
+               });
+               $("#caught").click(function(){
+                    $.post("/caught/", function(data){
+                        $("#dialog").html(data);
+                        $("#dialog").dialog({
+                            modal: true
+                        });
+                    }); 
+               });
+             });
+     </script>
+ 
+     <script>
+        window.onLoad = Prep();
+        function Prep() {
+            window_Height = window.innerHeight;
+            window_Width = window.innerWidth;
+            images = document.getElementsByClassName("image");
+            console.log(images);
+            for (i=0; i < images.length; i++) {
+                image_Height = images[i].clientHeight;
+                image_Width = images[i].clientWidth;
+                availSpace_V = window_Height - image_Height;
+                availSpace_H = window_Width - image_Width;
+                moveImage();
+                window.setInterval(moveImage, 1000);
+            }
+       }
+
+        function randomIntFromInterval(min,max)
+        {
+            return Math.floor(Math.random()*(max-min+1)+min);
+        }
+        
+        function moveImage(){
+            var randNum_V = Math.round(Math.random() * availSpace_V);
+            var randNum_H = Math.round(Math.random() * availSpace_H);
+            var i = Math.floor(Math.random() * images.length-1)+1;
+            images[i].style.top = randNum_V + "px";
+            images[i].style.left = randNum_H + "px";
+        }
+        function buyPykaballs() {
+            $.post("/buy/", function(data){
+                $("#balls").text(data);
+            });
+            
+        }
+        function displayCaught() {
+       }
+
+    </script>
+
+</body>
+
+</html>
