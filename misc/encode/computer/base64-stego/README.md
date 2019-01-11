@@ -1,6 +1,6 @@
 #### 方法一
 使用[读取隐写信息脚本](https://github.com/cjcslhp/wheels/tree/master/b64stego)  
-给**data.txt末行添加换行**并更名为stego.txt，运行b64b64DeStego.py即可
+将data.txt更名为stego.txt，运行b64b64DeStego.py即可
 
 ```
 In [122]: !python b64DeStego.py
