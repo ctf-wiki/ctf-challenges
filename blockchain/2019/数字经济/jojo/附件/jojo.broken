@@ -1,0 +1,18 @@
+pragma solidity ^0.4.24;
+
+contract jojo {
+    mapping(address => uint) public balanceOf;
+    mapping(address => uint) public gift;
+    address owner;
+        
+    constructor()public{
+        owner = msg.sender;
+    }
+    
+    event SendFlag(string b64email);
+    
+    function payforflag(string b64email) public {
+        require(balanceOf[msg.sender] >= 100000);
+        emit SendFlag(b64email);
+    }
+............

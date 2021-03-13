@@ -1,0 +1,3 @@
+- 题目名称 spock-lizard-omega
+    - 题目链接 [https://github.com/CCSIR/dctf-2017/tree/master/finals/blockchain/rock-paper-scissors-spock-lizard-omega](https://github.com/CCSIR/dctf-2017/tree/master/finals/blockchain/rock-paper-scissors-spock-lizard-omega)
+    - WP 链接 [https://github.com/CCSIR/dctf-2017/tree/master/finals/blockchain/rock-paper-scissors-spock-lizard-omega](https://github.com/CCSIR/dctf-2017/tree/master/finals/blockchain/rock-paper-scissors-spock-lizard-omega)

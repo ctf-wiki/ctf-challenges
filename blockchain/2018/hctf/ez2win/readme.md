@@ -1,0 +1,3 @@
+- 题目名称 ez2win
+    - 题目链接 [https://github.com/beafb1b1/challenges/tree/master/hctf/HCTF2018_ez2win](https://github.com/beafb1b1/challenges/tree/master/hctf/HCTF2018_ez2win)
+    - WP 链接 [https://paper.seebug.org/740/#ez2win](https://paper.seebug.org/740/#ez2win) [bibi](https://beafb1b1.github.io/blockchain/hctf_2018_ez2win/)

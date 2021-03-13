@@ -1,0 +1,3 @@
+- 题目名称 easy little trick
+    - 题目链接 [https://github.com/LCTF/LCTF2018/tree/master/Writeup/easy%20little%20trick](https://github.com/LCTF/LCTF2018/tree/master/Writeup/easy%20little%20trick)
+    - WP 链接 [https://github.com/LCTF/LCTF2018/tree/master/Writeup/easy%20little%20trick](https://github.com/LCTF/LCTF2018/tree/master/Writeup/easy%20little%20trick)
