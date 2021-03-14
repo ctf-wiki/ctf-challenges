@@ -1,0 +1,9 @@
+{% macro nav_link(name, url, active) %}
+<li>
+    {% if name == active %}
+        <a class="active" href="{{ url }}">{{ name }}</a>
+    {% else %}
+        <a href="{{ url }}">{{ name }}</a>
+    {% endif %}
+</li>
+{% endmacro %}

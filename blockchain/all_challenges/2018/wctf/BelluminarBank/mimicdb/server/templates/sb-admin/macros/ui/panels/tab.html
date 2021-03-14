@@ -1,0 +1,37 @@
+{% macro tab(id, tabtype, header, items) %}
+<div class="panel panel-default">
+	<div class="panel-heading">
+		{{header}}
+	</div>
+
+	<div class="panel-body">
+
+		<ul class="nav nav-{{tabtype}}">
+			{% for item in items %}
+				{% set hrefid="tabitem" + loop.index|string %}
+				{% set active="" %}
+				{% if loop.index == 1 %}
+				{% set active="active" %}
+				{% endif %}
+				<li class="{{active}}"><a href="#{{id}}{{hrefid}}" data-toggle="tab">{{item.tab}}</a>
+			{% endfor %}
+		</ul>
+		
+		<div class="tab-content">
+			{% for item in items %}
+				{% set hrefid="tabitem" + loop.index|string %}
+				{% set inactive="" %}
+				{% if loop.index == 1 %}
+				{% set inactive="in active" %}
+				{% endif %}
+				<div class="tab-pane fade {{inactive}}" id="{{id}}{{hrefid}}">
+					<h4>{{item.title}}</h4>
+					<p>{{item.text}}</p>
+				</div>
+			{% endfor %}
+		</div>
+		
+	</div>
+</div>
+
+{% endmacro %}

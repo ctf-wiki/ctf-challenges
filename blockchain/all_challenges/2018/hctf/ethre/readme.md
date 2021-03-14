@@ -1,3 +1,9 @@
-- 题目名称 ethre
-    - 题目链接 [https://github.com/Hcamael/ethre_source](https://github.com/Hcamael/ethre_source)
-    - WP 链接 [https://xz.aliyun.com/t/3261#toc-20](https://xz.aliyun.com/t/3261#toc-20)
+# ethre_source
+
+很简单的一道逆向题目，只是比较硬核，现在市面上的智能合约反编译并不是很成熟，合约一旦写复杂了，反编译器就没用了，所以都不需要自己写opcode，不需要加混淆，直接用remix编译就ok了。
+
+null队的师傅是真2天从0开始学智能合约逆向，膜一膜。
+
+wp我就懒得写了，看源码就能知道很简单的题。
+
+writeup: <https://xz.aliyun.com/t/3261#toc-20>

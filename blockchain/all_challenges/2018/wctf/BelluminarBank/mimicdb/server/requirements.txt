@@ -1,0 +1,6 @@
+Flask
+Flask-Admin
+Flask-Login
+MySQLdb
+psycopg2
+pymssql

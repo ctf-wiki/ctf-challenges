@@ -1,0 +1,30 @@
+{% macro accordion(header, items) %}
+<div class="panel panel-default">
+	<div class="panel-heading">
+		{{header}}
+	</div>
+	<div class="panel-body">
+		<div class="panel-group" id="accordion">
+			{% for item in items %}
+			{% set id="collapse" + loop.index|string %}
+			{% set in="" %}
+			{% if loop.index == 1 %}
+			{% set in="in" %}
+			{% endif %}
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" data-parent="#accordion" href="#{{id}}">{{item.header}}</a>
+						</h4>
+					</div>
+					<div id="{{id}}" class="panel-collapse collapse {{in}}">
+						<div class="panel-body">
+							{{item.text}}
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+{% endmacro %}

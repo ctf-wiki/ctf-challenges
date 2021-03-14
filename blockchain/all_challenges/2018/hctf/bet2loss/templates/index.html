@@ -1,0 +1,166 @@
+<html>
+<head>
+    {% load static %}
+</head>
+
+<body>
+<div>
+    <h1>Welcome to Bet2Loss Game!</h1>
+    <h3>only winner can get flag!</h3>
+<pre>
+
+1、Bet2Loss Game is based on Ropsten. open source on xxx.
+2、Every New gamer will airdrop 1000 B2GB for betting.
+3、Game Rule: Set a modulo (2 - 40), guess a number (0-(modulo-1)), and set a betnumber (1 - balanceOf(you) and less than 100000). If you win, you will get betnumber*modulo B2GB.
+4、Example: set 2 as modulo, guess 1, and bet 100 B2GB. if 1 == random_number%modulo, you will get 100*2, which is 200 B2GB.
+5、Ahhhh, if balanceOf(you) > 10000000, you can use the function PayForFlag. Admin will post the flag to your email.
+
+ps: you need install a eth wallet, just like metamask in chrome webstore and a little test eth for gasprice.
+ps: you can get the test eth from every ether faucet.(just like https://faucet.metamask.io/)
+
+</pre>
+</div>
+
+<div id="info">
+    Address: <div id="address">NULL</div>  Balance: <div id="balance">NULL</div><br>
+</div>
+
+<div class="form">
+<form>
+ Modulo(2-40):
+<input id="modulo" type="text" name="modulo">
+<br>
+ Bet Mask(0-(modulo-1)):
+<input id="betmask" type="text" name="betmask">
+<br>
+ Bet Number(1-balanceOf(you)):
+<input id="betnumber" type="text" name="betnumber">
+<br>
+<input id="do" type="button" name="bet" value="do it">
+</form>
+</div>
+
+<div id="result">
+
+</div>
+
+<div>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/web3.min.js' %}"></script>
+<script src="{% static 'js/bet2loss_abi.js' %}"></script>
+<script>
+
+    var Bet2loss;
+    var Bet2lossInstance;
+    var web3js;
+    var account;
+
+    function GetBalance(){
+        userAccount = account[0];
+
+        Bet2lossInstance.methods.balances(userAccount).call().then(function(result){
+            updateBalance(userAccount, result);
+        })
+    }
+
+    function updateBalance(address, balance){
+        //language=JQuery-CSS
+        $("div#info div#address").text(address);
+        $("div#info div#balance").text(balance);
+    }
+
+    function createTxns(modulo, betmask, betnumber, commitlastblock, commit, r, s, gasprice){
+        $("div#result").text("Just waiting...");
+        userAccount = account[0];
+
+        Bet2lossInstance.methods.placeBet(betmask, modulo, betnumber, commitlastblock, commit, r, s).send({ from: userAccount})
+            .on("receipt", function(receipt) {
+                $("div#result").text("Bet success, waiting to setbettle...");
+
+                    $.post("setbettle", {commit: commit}).done(function(data){
+                        $("div#result").text("Wow, bet finished...");
+                        setTimeout("GetBalance()", 3000);
+                    })
+            }).on("error", function(error) {
+                // Do something to alert the user their transaction has failed
+                $("div#result").text("Something error, maybe try again...");
+            }
+        );
+    }
+
+    function startApp(){
+        var Bet2lossAddress = "0x465c0394d1742a2250911562be2cff4148a2a1c1";
+
+        Bet2lossInstance = new web3js.eth.Contract(Bet2lossABI, Bet2lossAddress);
+{#        Bet2lossInstance = Bet2loss.at(Bet2lossAddress);#}
+
+        setInterval(function(){
+            GetBalance();
+        }, 1000);
+    }
+
+    window.addEventListener('load', async () => {
+
+        // 检查web3是否已经注入到(Mist/MetaMask)
+        if (window.ethereum) {
+            web3js = new Web3(ethereum);
+            try {
+                // Request account access if needed
+                account = await ethereum.enable();
+                // Acccounts now exposed
+            } catch (error) {
+                alert("you must install MetaMask and then join game!!");
+                return false;
+            }
+        }
+        else if (window.web3) {
+            // Acccounts always exposed
+            web3js = new Web3(web3.currentProvider);
+            account = we3.eth.accounts[0]
+        }
+        else {
+            console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+            return false
+        }
+
+        if (!account){
+            alert('please check you login status!');
+            return false;
+        }
+
+        // 现在你可以启动你的应用并自由访问 Web3.js:
+        startApp();
+
+        $('input#do').click(function(){
+
+            $("div#result").text("loading...");
+
+            $.get("random", function(data){
+                var commit = data['commit'];
+                var address = data['address'];
+                var gasPrice = data['gasPrice'];
+                var commitLastBlock = data['commitLastBlock'];
+                var r = data['signature']['r'];
+                var s = data['signature']['s'];
+
+                var modulo = $('input#modulo')[0].value;
+                var betmask = $('input#betmask')[0].value;
+                var betnumber = $('input#betnumber')[0].value;
+
+                if(!modulo || !betmask || !betnumber){
+                    alert("please, set modulo/betmask/betnumber!!");
+                    return false;
+                }
+
+                createTxns(modulo, betmask, betnumber,commitLastBlock, commit, r, s, gasPrice);
+
+             });
+        });
+     });
+
+
+
+</script>
+</div>
+</body>
+</html>

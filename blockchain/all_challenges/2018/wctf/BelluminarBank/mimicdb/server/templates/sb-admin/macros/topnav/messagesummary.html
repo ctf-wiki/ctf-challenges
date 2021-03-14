@@ -1,0 +1,13 @@
+{% macro  message_summary(receivedon, from, text, url)%}
+<li>
+	<a href="{{url}}">
+		<div>
+			<strong>{{from}}</strong>
+			<span class="pull-right text-muted">
+				<em>{{receivedon}}</em>
+			</span>
+		</div>
+		<div>{{text}}</div>
+	</a>
+</li>
+{% endmacro %}

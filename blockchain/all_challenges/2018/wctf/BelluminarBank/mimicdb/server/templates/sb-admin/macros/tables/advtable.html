@@ -1,0 +1,44 @@
+{% macro adv_table(header, columns, rows) %}
+<div class="panel panel-default">
+	<div class="panel-heading">
+		{{header}}
+	</div>
+	<!-- /.panel-heading -->
+	<div class="panel-body">
+		<div class="dataTable_wrapper">
+			<table class="table table-striped table-bordered table-hover" id="dataTables-example">
+				<thead>
+					<tr>
+						{% for c in columns %}
+							<th>{{c}}</th>
+						{% endfor %}
+					</tr>
+				</thead>
+				<tbody>
+					{% for r in rows %}
+						{% set c = "odd" %}
+						{% set grade = "gradeX" %}
+						{% if loop.index % 2 == 1 %}
+						{% set c = "even" %}
+						{% endif %}
+						<tr class="{{c}}">
+							{% for d in r %}
+								<td>{{d}}</td>
+							{% endfor %}
+						</tr>
+					{% endfor %}
+					
+				</tbody>
+			</table>
+		</div>
+		<!-- /.table-responsive -->
+		<div class="well">
+			<h4>DataTables Usage Information</h4>
+			<p>DataTables is a very flexible, advanced tables plugin for jQuery. In SB Admin, we are using a specialized version of DataTables built for Bootstrap 3. We have also customized the table headings to use Font Awesome icons in place of images. For complete documentation on DataTables, visit their website at <a target="_blank" href="https://datatables.net/">https://datatables.net/</a>.</p>
+			<a class="btn btn-default btn-lg btn-block" target="_blank" href="https://datatables.net/">View DataTables Documentation</a>
+		</div>
+	</div>
+	<!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endmacro %}

@@ -1,0 +1,44 @@
+{% macro table_simple(columns, rows, tabletype, context = None) %}
+{% set c = "table" %}
+{% if tabletype == "sink" %} 
+{% set c = "table table-striped table-bordered table-hover" %}
+{% endif %}
+{% if tabletype == "striped" %} 
+{% set c = "table table-striped" %}
+{% endif %}
+{% if tabletype == "hover" %} 
+{% set c = "table table-hover" %}
+{% endif %}
+{% set tc = "table-responsive" %}
+{% if tabletype == "bordered" %}
+{% set tc = "table-responsive table-bordered" %}
+{% endif %}
+<div class="panel panel-default">
+    <!-- /.panel-heading -->
+    <div class="panel-body">
+        <div class="{{tc}}">
+            <table class="{{c}}">
+                <thead>
+                    <tr>
+                        {% for col in columns %}
+                        <th>{{col}}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                        <tr {% if context and context|length >= loop.index %} class="{{context[loop.index-1]}}" {% endif%}>
+                        {% for d in row %}
+                            <td>{{d}}</td>
+                        {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- /.table-responsive -->
+    </div>
+    <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endmacro %}

@@ -1,0 +1,151 @@
+<link rel="import" href="view-registry.html">
+
+<script>
+  (function() {
+
+    function insertAfter(newNode, referenceNode) {
+      referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+    }
+
+    function insertBefore(newNode, referenceNode) {
+      referenceNode.parentNode.insertBefore(newNode, referenceNode);
+    }
+
+    function Holder(id, comment) {
+      this.id = id;
+      this.comment = comment;
+    }
+
+    Holder.prototype.place = function(content) {
+      insertAfter(content, this.comment);
+      this.content = content;
+    };
+
+    Holder.prototype.remove = function() {
+      var template = this.content.templateInstance;
+      var node = template.firstNode;
+      if (node) {
+        if (template.firstNode == template.lastNode)
+          this.comment.parentNode.removeChild(node);
+        else {
+          while (node && node != template.lastNode) {
+            var saveNode = node;
+            node = node.nextSibling;
+            this.comment.parentNode.removeChild(saveNode);
+          }
+          this.comment.parentNode.removeChild(template.lastNode);
+        }
+      }
+      delete this.content;
+    };
+
+    var observeDOM = (function() {
+      var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
+        eventListenerSupported = window.addEventListener;
+
+      return function(obj, callback) {
+        if (MutationObserver) {
+          // define a new observer
+          var obs = new MutationObserver(function(mutations, observer) {
+            if (mutations[0].addedNodes.length || mutations[0].removedNodes.length)
+              callback();
+          });
+          // have the observer observe foo for changes in children
+          obs.observe(obj, {
+            childList: true,
+            subtree: true
+          });
+        } else if (eventListenerSupported) {
+          obj.addEventListener('DOMNodeInserted', callback, false);
+          obj.addEventListener('DOMNodeRemoved', callback, false);
+        }
+      };
+    })();
+
+    var proto = {
+      created: function() {
+        if (!this.hasAttribute('id'))
+          throw Error('place-holder should vahe a unique id');
+
+        this.cache = document.createElement('view-registry').getCache('place-holder:id');
+
+        if (this.getAttribute('renderAs') == 'comment') {
+          var comment = document.createComment('place-holder:' + this.id);
+          var holder = new Holder(this.id, comment);
+          comment.holder = holder;
+          this.cache.set('#' + this.id, holder);
+          insertBefore(comment, this);
+          this.parentNode.removeChild(this);
+        } else {
+          this.cache.set('#' + this.id, this);
+        }
+
+      },
+
+      attached: function() {
+
+      },
+
+      detached: function() {
+        if (this.getAttribute('renderAs') == 'comment')
+          return;
+        this.cache.del('#' + this.id);
+
+      },
+
+      place: function(content) {
+        if (this.render == 'nextsibling')
+          insertAfter(content, this);
+        else this.appendChild(content);
+        this.content = content;
+        console.log('Holder content placed: ' + this.id);
+      },
+
+      remove: function() {
+        if (this.render == 'nextsibling') {
+          var template = this.content.templateInstance;
+          var node = template.firstNode;
+          if (node) {
+            if (template.firstNode == template.lastNode)
+              this.parentNode.removeChild(node);
+            else {
+              while (node && node != template.lastNode) {
+                var saveNode = node;
+                node = node.nextSibling;
+                this.parentNode.removeChild(saveNode);
+              }
+              this.parentNode.removeChild(template.lastNode);
+            }
+          }
+        } else {
+          var node = this;
+          while (node.firstChild) {
+            node.removeChild(node.firstChild);
+          }
+        }
+        delete this.content;
+      }
+    };
+
+    var placeHolder = document.createElement('polymer-element');
+    placeHolder.setAttribute('name', 'place-holder');
+    placeHolder.setAttribute('attributes', 'render');
+    placeHolder.init();
+
+    Polymer('place-holder', Polymer.mixin({}, proto));
+
+    placeHolder = document.createElement('polymer-element');
+    placeHolder.setAttribute('name', 'states-section');
+    placeHolder.setAttribute('attributes', 'render');
+    placeHolder.setAttribute('extends', 'section');
+
+    placeHolder.init();
+
+    Polymer('states-section', Polymer.mixin({}, proto));
+
+
+
+
+  })();
+</script>
+</polymer-element>

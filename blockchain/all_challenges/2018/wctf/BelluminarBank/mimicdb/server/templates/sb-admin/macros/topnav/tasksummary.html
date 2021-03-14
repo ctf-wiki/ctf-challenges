@@ -1,0 +1,15 @@
+{% macro task_summary(name, type, completed, url) %}
+<a href="{{url}}">
+	<div>
+		<p>
+			<strong>{{name}}</strong>
+			<span class="pull-right text-muted">{{completed}}% Complete</span>
+		</p>
+		<div class="progress progress-striped active">
+			<div class="progress-bar progress-bar-{{type}}" role="progressbar" aria-valuenow="{{completed}}" aria-valuemin="0" aria-valuemax="100" style="width: {{completed}}%">
+				<span class="sr-only">{{completed}}% Complete ({{type}})</span>
+			</div>
+		</div>
+	</div>
+</a>
+{% endmacro %}

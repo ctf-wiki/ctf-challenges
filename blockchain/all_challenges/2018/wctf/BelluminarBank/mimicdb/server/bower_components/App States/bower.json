@@ -1,0 +1,30 @@
+{
+  "name": "App States",
+  "description": "Advanced router/state manager for Polymer",
+  "main": "app-states.html",
+  "keywords": [
+    "router",
+    "polymer",
+    "state-manager",
+    "web-components"
+  ],
+  "authors": [
+    "Tansu TURKOGLU <tansu.turkoglu@kalitte.com.tr>"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.5.4",
+    "webcomponentsjs": "~0.5.4"
+  },
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "lib",
+    "test",
+    "tests",
+    "tmp",
+    "gulpfile.js",
+    "package.json"
+  ]
+}

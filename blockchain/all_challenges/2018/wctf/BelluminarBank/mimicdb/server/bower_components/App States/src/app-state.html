@@ -1,0 +1,317 @@
+<polymer-element name="app-state" attributes="header url forceReload regex bindModel bindAs bindModelAs bindUrlParams bindState urlPostfix target el" hidden>
+  <script>
+    (function() {
+
+      function StateModel() {
+
+      }
+
+
+
+      function viewsOfState(viewList, parentList, map) {
+        var result = [];
+
+        parentList.forEach(function(state) {
+          viewList.forEach(function(viewItems) {
+            viewItems.forEach(function(viewItem) {
+              if (viewItem.parentNode === state)
+                result.push(map ? map(viewItem) : viewItem);
+            });
+          });
+        });
+
+        return result;
+      }
+
+      function unloadStatesAndGetHierarchy(targetState, stateHierarchy) {
+
+        stateHierarchy = stateHierarchy || [];
+
+        var unloadSiblingStates = function(state) {
+          var next = state.nextElementSibling;
+          while (next) {
+            if (next.tagName == 'APP-STATE' && next.loaded)
+              next.unLoad();
+            next = next.nextElementSibling;
+          }
+
+          var previous = state.previousElementSibling;
+          while (previous) {
+            if (previous.tagName == 'APP-STATE' && previous.loaded)
+              previous.unLoad();
+            previous = previous.previousElementSibling;
+          }
+        };
+
+        var node = targetState.parentNode;
+
+        stateHierarchy.splice(0, 0, targetState);
+
+        while (node && node.tagName === 'APP-STATE') {
+          stateHierarchy.splice(0, 0, node);
+          unloadSiblingStates(node);
+          node = node.parentNode;
+        }
+
+        unloadSiblingStates(targetState);
+
+        var children = targetState.querySelectorAll('app-state');
+
+        [].map.call(children, function(childState) {
+          if (childState && childState.tagName == 'APP-STATE' && childState.loaded)
+            childState.unLoad();
+        });
+      }
+
+      function loadState(hierarchy, contentPresenters, loadedPresenters) {
+
+        var doLoadState = function(state) {
+          state.loaded = true;
+          state.initializeModel();
+          console.log('State ' + (state.id || state.header || 'anonymous') + ' loaded using model');
+          console.log(state.model);
+        };
+
+        var ensuredStates = [];
+        var visitState = function(state, presenters, childPresenters) {
+          var directChildren = presenters.map(function(view) {
+            return view.target;
+          });
+
+          var childrenOfChildren = childPresenters.map(function(view) {
+            return view.target;
+          });
+
+          var stateWasLoaded = state.loaded;
+
+
+          for (var i = 0; i < directChildren.length; i++) {
+            var presenter = presenters[i];
+            if (childrenOfChildren.indexOf(directChildren[i]) < 0) {
+              if (stateWasLoaded) {
+                if (typeof(state.forceReload) != 'undefined') {
+                  state.unLoad();
+                  doLoadState(state);
+                }
+
+                if (!presenter.instance)
+                  presenter.loadContent(state.model);
+                else {
+                  if (ensuredStates.indexOf(state) < 0) {
+                    state.ensureUrlParams();
+                    ensuredStates.push(state);
+                  }
+                }
+              } else {
+                doLoadState(state);
+                stateWasLoaded = true;
+                presenter.loadContent(state.model);
+              }
+            }
+          }
+
+          if (!stateWasLoaded) {
+            doLoadState(state);
+          }
+        };
+
+
+        loadedPresenters = loadedPresenters || [];
+
+        for (var i = 0; i < hierarchy.length; i++) {
+          var state = hierarchy[i];
+          var presenters = viewsOfState(contentPresenters, [state]);
+          var childPresenters = viewsOfState(contentPresenters, hierarchy.slice(i + 1));
+          visitState.call(this, state, presenters, childPresenters);
+        }
+      }
+
+      Polymer({
+
+        get parentState() {
+          var node = this.parentNode;
+          while (node) {
+            if (node.tagName == "APP-STATE")
+              return node;
+            node = node.parentNode;
+          }
+        },
+
+
+        initializeModel: function() {
+
+          if (this.modelInitialized)
+            throw Error('Model seems already initialized for state ' + this.id);
+
+          var url = this.manager.parseUrl();
+          var urlParams = window.AppStates.util.routeArguments(this.url, url.path, url.search, this.regex, this.manager.typecast === 'auto');
+          var model, node = this.parentNode;
+
+          while (!model && node && (node.tagName == 'APP-STATE')) {
+            model = node.model;
+            node = node.parentNode;
+          }
+
+          var proto = model ? Object.create(model) : Object.create(StateModel.prototype);
+          var sharedProps = {};
+
+          if (this.bindUrlParams || this.bindUrlParams === '') {
+            var urlParamsPath = this.bindUrlParams === '' ? 'urlParams' : this.bindUrlParams;
+            sharedProps[urlParamsPath] = urlParams;
+          } else {
+            node = this.parentNode;
+            while (node && (node.tagName == 'APP-STATE')) {
+              if (node.bindUrlParams || node.bindUrlParams === '') {
+                var urlParamsPth = node.bindUrlParams === '' ? 'urlParams' : node.bindUrlParams;
+                var parentInstance = node.model[urlParamsPth];
+                var thisInstance = parentInstance ? parentInstance : Object.create();
+                for (var urlParam in urlParams)
+                  if (typeof thisInstance[urlParam] == 'undefined')
+                    thisInstance[urlParam] = urlParams[urlParam];
+                  //sharedProps[urlParamsPth] = thisInstance;
+                break;
+              }
+              node = node.parentNode;
+            }
+          }
+
+          if (this.bindState || this.bindState === '') {
+            var statePath = this.bindState === '' ? 'state' : this.bindState;
+            sharedProps[statePath] = this;
+          } else {
+            node = this.parentNode;
+            while (node && (node.tagName == 'APP-STATE')) {
+              if (node.bindState || node.bindState === '') {
+                var statePth = node.bindState === '' ? 'state' : node.bindState;
+                sharedProps[statePth] = this;
+                break;
+
+              }
+              node = node.parentNode;
+            }
+          }
+
+          this.model = AppStates.util.createStateModel(proto, sharedProps, this.bindModel, this.bindAs, this.bindModelAs);
+          this.modelInitialized = true;
+        },
+
+        ensureUrlParams: function() {
+
+          var url = this.manager.parseUrl();
+          var existingUrlParams = window.AppStates.util.routeArguments(this.url, url.path, url.search, this.regex, this.manager.typecast === 'auto');
+
+          var urlParams;
+
+          var node = this;
+          while (node && (node.tagName == 'APP-STATE')) {
+            if (node.bindUrlParams || node.bindUrlParams === '') {
+              var urlParamsPth = node.bindUrlParams === '' ? 'urlParams' : node.bindUrlParams;
+              urlParams = node.model[urlParamsPth];
+              break;
+            }
+            node = node.parentNode;
+          }
+
+          if (urlParams) {
+            for (var param in existingUrlParams) {
+              urlParams[param] = existingUrlParams[param];
+            }
+            for (var param2 in urlParams)
+              if (typeof existingUrlParams[param2] == 'undefined')
+                delete urlParams[param2];
+          }
+        },
+
+        killModel: function() {
+          for (var prop in this.model) {
+            if (this.model.hasOwnProperty(prop)) {
+              this.model[prop] = undefined;
+              delete this.model[prop];
+            }
+          }
+          delete this.modelInitialized;
+          delete this.model;
+        },
+
+        getModel: function() {
+          return this.model;
+        },
+
+        getStateManager: function() {
+          var node = this.parentNode;
+          while (node) {
+            if (node.tagName == 'APP-STATES')
+              return node;
+            node = node.parentNode;
+          }
+        },
+
+        created: function() {
+          this.stateViewCache = document.createElement('view-registry').getCache('states-template:target');
+        },
+
+        ready: function() {
+
+          if (this.target && (this.el || this.id)) {
+            this.innerHTML = this.innerHTML + '<template is="states-template" target="' + this.target + '"><' + (this.el || this.id) + '></' + (this.el || this.id)  + '></template>';
+          }
+
+          if (this.hasAttribute('childStates')) {
+            var el = this.getAttribute('childStates');
+            if (typeof el != 'undefined') {
+              var content = document.createElement(el);
+              var states = window.AppStates.util.directChildren(content.shadowRoot, 'app-state');
+              states.forEach(function(state) {
+                this.appendChild(state);
+              }.bind(this));
+            }
+          }
+        },
+
+        attached: function() {
+          this.manager = this.getStateManager();
+          if (!this.manager)
+            this.manager = document.querySelector('body /deep/ app-states');
+        },
+
+
+
+        load: function() {
+          if (this.hasAttribute('redirect')) {
+            this.manager.go(this.getAttribute('redirect'), {
+              replace: true
+            });
+            return;
+          }
+          var hierarchy = [];
+          unloadStatesAndGetHierarchy(this, hierarchy);
+          loadState.call(this, hierarchy, this.stateViewCache.itemsArray());
+        },
+
+        buildUrl: function(params) {
+          return window.AppStates.util.buildUrl(this.url, params, this.manager.mode);
+        },
+
+        unLoad: function() {
+          var state = this;
+          var node = this.children[0];
+          while (node) {
+            if (node.tagName == 'APP-STATE' && node.loaded)
+              node.unLoad();
+            node = node.nextElementSibling;
+          }
+          var allStateViewItems = this.stateViewCache.itemsArray(),
+            stateViews = viewsOfState(allStateViewItems, [state], function(view) {
+              view.clearContent();
+              return view;
+            });
+
+          delete state.loaded;
+          state.killModel();
+
+          console.log('State unloaded: ' + (state.id || state.header || 'anonymous'));
+        }
+      });
+    })();
+  </script>
+</polymer-element>
