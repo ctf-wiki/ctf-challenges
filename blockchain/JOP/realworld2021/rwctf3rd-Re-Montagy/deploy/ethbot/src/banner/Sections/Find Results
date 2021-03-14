@@ -1,0 +1,28 @@
+Searching 4408 files for "est_ga"
+
+/Users/xiaohang.yu/Documents/xhyu/ctf_design/rw20_montagy/montagy/deploy/ethbot/conf/base.py:
+    8  gasPriceOfAddLiquidity = 60000000000
+    9  
+   10: est_gas = "0.6eth"
+   11  
+   12  providerOfNetwork = "https://rinkeby.infura.io/v3/af5a1d6c6ae04585b340adc84718a3c4"
+
+/Users/xiaohang.yu/Documents/xhyu/ctf_design/rw20_montagy/montagy/deploy/ethbot/src/banner/Sections/Creation.py:
+    1  from src.utils.auth import encrypt_then_mac, create_game_account
+    2: from conf.base import AES_KEY, HMAC_KEY, est_gas
+    3  
+    4  def run(ctx):
+    .
+   19  	print("[+]Token: {}".format(token))
+   20  
+   21: 	print("[+]Please transfer at least {} to your game account before Deploy".format(est_gas))
+   22  	#print("[+]Make sure that you have enough ether to deploy!!!!!!")
+
+/Users/xiaohang.yu/Documents/xhyu/ctf_design/rw20_montagy/montagy/deploy/ethbot/src/utils/compiler.py:
+   10  
+   11  # web3
+   12: def get_deploy_est_gas(ctx, cont_if):
+   13  	w3 = ctx['web3instance']
+   14  	instance = w3.eth.contract(
+
+4 matches across 3 files

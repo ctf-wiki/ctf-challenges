@@ -1,0 +1,3 @@
+- 题目名称 Fake3d
+    - 题目链接 [https://beafb1b1.github.io/blockchain/bctf2018_fake3d_eosgame/](https://beafb1b1.github.io/blockchain/bctf2018_fake3d_eosgame/)
+    - WP 链接 [https://beafb1b1.github.io/blockchain/bctf2018_fake3d_eosgame/](https://beafb1b1.github.io/blockchain/bctf2018_fake3d_eosgame/)

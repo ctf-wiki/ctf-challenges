@@ -1,0 +1,3 @@
+- 题目名称 Acoraida Monica
+    - 题目链接 [https://gist.github.com/LiveOverflow/21c8a505ca176e5bb20bc94eb23acdf1](https://gist.github.com/LiveOverflow/21c8a505ca176e5bb20bc94eb23acdf1)
+    - WP 链接 [https://github.com/xhyumiracle/defcon27](https://github.com/xhyumiracle/defcon27)

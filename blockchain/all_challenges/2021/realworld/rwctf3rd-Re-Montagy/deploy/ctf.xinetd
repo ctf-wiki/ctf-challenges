@@ -1,0 +1,17 @@
+service CreativityPlus
+{
+        disable = no
+        flags           = REUSE
+        type            = UNLISTED
+        per_source      = 5
+        port            = 10101
+        protocol        = tcp
+        socket_type     = stream
+        wait            = no
+        user            = root
+        server          = /usr/bin/python3
+        server_args     = /root/ethbot/index.py
+        log_type        = FILE /root/log/mon20.log
+        log_on_failure  += USERID HOST
+        log_on_success  = DURATION EXIT HOST PID USERID
+}
