@@ -1,3 +1,4 @@
-- 题目名称 bet2loss
-    - 题目链接 [https://github.com/LoRexxar/HCTF2018_bet2loss](https://github.com/LoRexxar/HCTF2018_bet2loss)
-    - WP 链接 [https://paper.seebug.org/740/#bet2loss](https://paper.seebug.org/740/#bet2loss)
+# HCTF2018_bet2loss
+
+
+bet2loss服务端源码

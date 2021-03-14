@@ -1,0 +1,13 @@
+{% macro panel(paneltype, header, text, footer) %}
+<div class="panel panel-{{paneltype}}">
+	<div class="panel-heading">
+		{{header}}
+	</div>
+	<div class="panel-body">
+		<p>{{text}}</p>
+	</div>
+	<div class="panel-footer">
+		{{footer}}
+	</div>
+</div>
+{% endmacro %}

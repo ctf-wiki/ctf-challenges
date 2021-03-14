@@ -1,0 +1,136 @@
+{% from "sb-admin/macros/navlink.html" import nav_link with context %}
+{% from "sb-admin/macros/topnav/messagesummary.html" import message_summary with context %}
+{% from "sb-admin/macros/topnav/tasksummary.html" import task_summary with context %}
+{% from "sb-admin/macros/topnav/alert.html" import alert with context %}
+
+{% macro nav_bar(name) %}
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="{{url_for('admin.index')}}">{{ admin_view.admin.name }}</a>
+    </div>
+    <!-- /.navbar-header -->
+
+    <ul class="nav navbar-top-links navbar-right">
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="fa fa-envelope fa-fw"></i>  <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-messages">
+                {% for m in admin_view.nav.messages %}
+                    {{message_summary(m.receivedon, m.from, m.text, m.url)}}
+                    <li class="divider"></li>
+                {% endfor %}
+                <li>
+                    <a class="text-center" href="#">
+                        <strong>Read All Messages</strong>
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+            </ul>
+            <!-- /.dropdown-messages -->
+        </li>
+        <!-- /.dropdown -->
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="fa fa-tasks fa-fw"></i>  <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-tasks">
+                {% for t in admin_view.nav.tasks %}
+                    <li>
+                        {{task_summary(t.name, t.type, t.completed, t.url)}}
+                    </li>                   
+                    <li class="divider"></li>
+                {% endfor %}
+                <li>
+                    <a class="text-center" href="#">
+                        <strong>See All Tasks</strong>
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+            </ul>
+            <!-- /.dropdown-tasks -->
+        </li>
+        <!-- /.dropdown -->
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-alerts">
+                {% for a in admin_view.nav.alerts %}
+                    <li>
+                        {{alert(a.title, a.type, a.time, a.url)}}
+                    </li>
+                    <li class="divider"></li>
+                {% endfor %}
+                <li>
+                    <a class="text-center" href="#">
+                        <strong>See All Alerts</strong>
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+            </ul>
+            <!-- /.dropdown-alerts -->
+        </li>
+        <!-- /.dropdown -->
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-user">
+                <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                </li>
+                <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                </li>
+                <li class="divider"></li>
+                <li><a href="{{ url_for('admin.logout_view') }}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                </li>
+            </ul>
+            <!-- /.dropdown-user -->
+        </li>
+        <!-- /.dropdown -->
+    </ul>
+    <!-- /.navbar-top-links -->
+
+    <div class="navbar-default sidebar" role="navigation">
+        <div class="sidebar-nav navbar-collapse">
+            <ul class="nav" id="side-menu">
+                <li class="sidebar-search">
+                    <div class="input-group custom-search-form">
+                        <input type="text" class="form-control" placeholder="Поиск...">
+                        <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                    </div>
+                    <!-- /input-group -->
+                </li>
+                <li>
+                    <a href="{{url_for('admin.index')}}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                </li>
+                {% if name == "Blank Page" or name == "Login Page" %}
+                <li class="active">
+                {% else %}
+                <li>
+                {% endif %}
+                    <a href="#"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        {{nav_link(name="Blank Page", url=url_for('admin.blank'), active=name)}}
+                        {{nav_link(name="Login Page", url=url_for('admin.logout_view'), active=name)}}
+                    </ul>
+                    <!-- /.nav-second-level -->
+                </li>
+            </ul>
+        </div>
+        <!-- /.sidebar-collapse -->
+    </div>
+    <!-- /.navbar-static-side -->
+</nav>
+{% endmacro %}

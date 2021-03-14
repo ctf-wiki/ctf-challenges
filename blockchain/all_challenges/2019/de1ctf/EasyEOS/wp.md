@@ -1,0 +1,3 @@
+- 题目名称 Easy EOS
+    - 题目链接 [https://github.com/De1ta-team/De1CTF2019/tree/master/writeup/misc/Easy%20EOS](https://github.com/De1ta-team/De1CTF2019/tree/master/writeup/misc/Easy%20EOS)
+    - WP 链接 [官方WP](https://github.com/De1ta-team/De1CTF2019/tree/master/writeup/misc/Easy%20EOS) [f0rm2l1n_wp1](https://www.anquanke.com/post/id/183848) [f0rm2l1n_wp2](https://www.anquanke.com/post/id/185251)

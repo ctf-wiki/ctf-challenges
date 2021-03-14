@@ -1,0 +1,39 @@
+{% macro adv_table_track_user(header, columns, rows) %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Process statistics
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body">
+        <div class="dataTable_wrapper">
+            <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                <thead>
+                    <tr>
+                        {% for c in columns %}
+                            <th>{{c}}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in rows %}
+                        {% set c = "odd" %}
+                        {% set grade = "gradeX" %}
+                        {% if loop.index % 2 == 1 %}
+                        {% set c = "even" %}
+                        {% endif %}
+                        <tr class="{{c}}">
+                            {% for i in range(r.__len__()) %}
+                                <td>{{r[i]}}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    
+                </tbody>
+            </table>
+        </div>
+        <!-- /.table-responsive -->
+    </div>
+    <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+{% endmacro %}

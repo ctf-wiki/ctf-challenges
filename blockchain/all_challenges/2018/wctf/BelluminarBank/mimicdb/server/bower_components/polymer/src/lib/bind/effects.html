@@ -1,0 +1,105 @@
+<!--
+@license
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../case-map.html">
+<script>
+
+  Polymer.Base.extend(Polymer.Bind, {
+
+    _shouldAddListener: function(effect) {
+      return effect.name &&
+             effect.mode === '{' &&
+             !effect.negate &&
+             effect.kind != 'attribute'
+             ;
+    },
+
+    annotationEffect: function(source, value, effect) {
+      if (source != effect.value) {
+        value = this.getPathValue(effect.value);
+        this._data[effect.value] = value;
+      }
+      var calc = effect.negate ? !value : value;
+      return this._applyEffectValue(calc, effect);
+    },
+
+    reflectEffect: function(source) {
+      this.reflectPropertyToAttribute(source);
+    },
+
+    notifyEffect: function(source) {
+      this._notifyChange(source);
+    },
+
+    // Raw effect for extension; effect.function is an actual function
+    functionEffect: function(source, value, effect, old) {
+      effect.function.call(this, source, value, effect, old);
+    },
+
+    observerEffect: function(source, value, effect, old) {
+      this[effect.method](value, old);
+    },
+
+    complexObserverEffect: function(source, value, effect) {
+      var args = Polymer.Bind._marshalArgs(this._data, effect, source, value);
+      if (args) {
+        this[effect.method].apply(this, args);
+      }
+    },
+
+    computeEffect: function(source, value, effect) {
+      var args = Polymer.Bind._marshalArgs(this._data, effect, source, value);
+      if (args) {
+        this[effect.property] = this[effect.method].apply(this, args);
+      }
+    },
+
+    annotatedComputationEffect: function(source, value, effect) {
+      var args = Polymer.Bind._marshalArgs(this._data, effect, source, value);
+      if (args) {
+        var computedHost = this._rootDataHost || this;
+        var computedvalue = 
+          computedHost[effect.method].apply(computedHost, args);
+        this._applyEffectValue(computedvalue, effect);
+      }
+    },
+
+    // path & value are used to fill in wildcard descriptor when effect is
+    // being called as a result of a path notification
+    _marshalArgs: function(model, effect, path, value) {
+      var values = [];
+      var args = effect.args;
+      for (var i=0, l=args.length; i<l; i++) {
+        var arg = args[i];
+        var name = arg.name;
+        var v = arg.structured ?
+          Polymer.Base.getPathValue(name, model) : model[name];
+        if (v === undefined) {
+          return;
+        }
+        if (arg.wildcard) {
+          // Only send the actual path changed info if the change that
+          // caused the observer to run matched the wildcard
+          var baseChanged = (name.indexOf(path + '.') === 0);
+          var matches = (effect.arg.name.indexOf(name) === 0 && !baseChanged);
+          values[i] = {
+            path: matches ? path : name,
+            value: matches ? value : v,
+            base: v
+          };
+        } else {
+          values[i] = v;
+        }
+      }
+      return values;
+    }
+
+  });
+
+</script>

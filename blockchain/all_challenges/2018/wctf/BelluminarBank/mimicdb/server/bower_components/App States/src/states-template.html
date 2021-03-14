@@ -1,0 +1,109 @@
+<polymer-element name="states-template" extends="template" attributes="target bindModel bindAs bindModelAs">
+  <script>
+    (function() {
+      Polymer({
+
+        getHolder: function() {
+          var holder = this.holderCache.get(this.target);
+          if (!holder)
+            throw Error('states-template: Cannot locate target:' + this.target);
+
+          return holder;
+        },
+
+        attached: function() {
+          this.holderCache = document.createElement('view-registry').getCache('place-holder:id');
+          this.cache = document.createElement('view-registry').getCache('states-template:target');
+
+
+          var stateviews = this.cache.get(this.target);
+          if (!stateviews)
+            this.cache.set(this.target, [this]);
+          else stateviews.push(this);
+        },
+
+        detached: function() {
+          delete this.instance;
+          var stateviews = this.cache.get(this.target);
+          if (stateviews && stateviews.length)
+            if (stateviews.indexOf(this) >= 0)
+              stateviews.splice(stateviews.indexOf(this), 1);
+        },
+
+        changeModel: function(model) {
+          // Ideally we should just set new model but it doesn't work as expected.
+          var targetModel = this.instance.templateInstance.model;
+          for (var property in model) {
+            if (model.hasOwnProperty(property)) {
+              targetModel[property] = model[property];
+            }
+          }
+        },
+
+        clearContent: function() {
+
+          if (!this.instance)
+            return;
+
+          var holder = this.getHolder();
+          holder.remove();
+          delete this.instance;
+        },
+
+        makeSyntax: function(model) {
+          var events = Object.create(Polymer.api.declaration.events);
+          var self = this;
+          var controller = model;
+          events.findController = function() {
+            return controller;
+          };
+
+          var syntax = new PolymerExpressions();
+          var prepareBinding = syntax.prepareBinding;
+          syntax.prepareBinding = function(pathString, name, node) {
+            return events.prepareEventBinding(pathString, name, node) ||
+                   prepareBinding.call(syntax, pathString, name, node);
+          };
+          return syntax;
+        },
+
+
+        loadInto: function(holder, model) {
+
+
+
+          if (this.bindModel) {
+            var proto = Object.create(model);
+            model = AppStates.util.createStateModel(proto, null, this.bindModel, this.bindAs, this.bindModelAs);
+          }
+
+          var instances = this.cache.get(this.target);
+          instances.forEach(function(presenter) {
+            if (this != presenter && presenter.instance && presenter.target != this.virtualHolder)
+              presenter.clearContent();
+          }.bind(this));
+
+          if (holder.content)
+            holder.remove();
+
+          var instance = this.createInstance(model, this.makeSyntax());
+
+          this.instance = instance;
+          holder.place(instance);
+        },
+
+        loadContent: function(model) {
+
+          if (this.instance) {
+            throw Error('Virtual view already loaded. Clear first.');
+          }
+          var holder = this.getHolder();
+
+          this.loadInto(holder, model);
+        }
+      });
+
+    })();
+  </script>
+
+</polymer-element>

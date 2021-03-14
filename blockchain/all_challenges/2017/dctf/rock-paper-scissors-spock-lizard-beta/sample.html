@@ -1,0 +1,29 @@
+<html>
+<head>
+
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<script>
+var client;
+var mytarget = '0x'; //address
+
+$(document).ready(function() {
+	client = io.connect('http://45.77.142.124:8080');
+
+	/* receive transactions based on web3.eth.subscribe('pendingTransactions') */
+	client.on('transaction', function(data) {
+		console.log('transaction', data); 
+	});
+
+	client.on('connect', function() {
+		console.log('connected');
+		client.emit('listen_for', mytarget);
+	});
+});
+</script>
+
+</head>
+<body>
+</body>
+</html>

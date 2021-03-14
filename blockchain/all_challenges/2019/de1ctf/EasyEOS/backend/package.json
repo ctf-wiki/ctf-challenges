@@ -1,0 +1,21 @@
+{
+  "name": "easy_eos",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.0.0",
+    "eosjs": "^20.0.0",
+    "node-fetch": "^2.6.0",
+    "nodemailer": "^6.2.1"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.3"
+  }
+}

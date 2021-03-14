@@ -1,0 +1,58 @@
+<script>
+  (function() {
+
+    function Cache(name) {
+      this.name = name;
+      this.internalCache = {};
+    }
+
+    Cache.prototype.get = function(key, def) {
+      return this.internalCache[key];
+    };
+
+    Cache.prototype.set = function(key, value) {
+       if (this.get(key))
+         throw Error("Already have an id :" + key);
+      this.internalCache[key] = value;
+    };
+
+    Cache.prototype.del = function(key) {
+      if (!this.get(key))
+        throw Error("Cannot delete a non-existing id :" + key);
+      delete this.internalCache[key];
+    };
+
+    Cache.prototype.items = function() {
+      return this.internalCache;
+    };
+
+    Cache.prototype.itemsArray = function() {
+      var result = [];
+      for(var k in this.internalCache)
+        result.push(this.internalCache[k]);
+      return result;
+    };
+
+    var cacheList = {};
+
+    function defineCache(name) {
+       var newCache = cacheList[name];
+       if (!newCache) {
+         cacheList[name] = newCache = new Cache(name);
+       }
+       return newCache;
+    }
+
+    var Element = Object.create(HTMLElement.prototype);
+
+    Element.getCache = function(name) {
+      return defineCache.call(this, name);
+    };
+
+    document.registerElement('view-registry', {
+      prototype: Element
+    });
+
+  })();
+
+</script>

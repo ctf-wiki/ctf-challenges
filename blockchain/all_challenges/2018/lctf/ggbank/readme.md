@@ -1,3 +1,1 @@
-- 题目名称 ggbank
-    - 题目链接 [https://github.com/LCTF/LCTF2018/tree/master/Writeup/gg%20bank](https://github.com/LCTF/LCTF2018/tree/master/Writeup/gg%20bank)
-    - WP 链接 [https://github.com/LCTF/LCTF2018/tree/master/Writeup/gg%20bank](https://github.com/LCTF/LCTF2018/tree/master/Writeup/gg%20bank)
+https://ropsten.etherscan.io/address/0x7caa18D765e5B4c3BF0831137923841FE3e7258a#code

@@ -1,0 +1,3 @@
+- 题目名称 ggbank
+    - 题目链接 [https://github.com/LCTF/LCTF2018/tree/master/Writeup/gg%20bank](https://github.com/LCTF/LCTF2018/tree/master/Writeup/gg%20bank)
+    - WP 链接 [https://github.com/LCTF/LCTF2018/tree/master/Writeup/gg%20bank](https://github.com/LCTF/LCTF2018/tree/master/Writeup/gg%20bank)

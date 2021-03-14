@@ -1,0 +1,5 @@
+{% macro alert(type, text) %}
+<div class="alert alert-{{type}}">
+	{{text|safe}}
+</div>
+{% endmacro %}
