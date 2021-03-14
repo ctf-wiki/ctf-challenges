@@ -1,0 +1,2 @@
+testToken = "hyXEbGtcMN+CZPGqD2YqW/7qJtMNE28J4yVquNQ9TIFbYvlcEDmLsXtDNHT3P0kTBEqyPirNF0VmFjV0R2ib2ECusEzfCR7ZRQhMstTyEsGXpJW3I/2Y1jRc/f1arvKkFLyNcbuOQ+j8MYBXtl17YvvlQbTSfq0l8zvrIjw61r0="
+workdir = "/root/ethbot"
